@@ -1,0 +1,17 @@
+<h1>{{title}}</h1>
+<ul class='balance'>
+	<li *ngFor = 'let superCuenta of balance' >
+		<span class='badge'>{{superCuenta.descripcion}}: </span>
+		<ol>
+			<li *ngFor = 'let cuenta of superCuenta.desglose' >
+				<span class='badge'>{{cuenta.descripcion}}: </span>
+				<ol>
+					<li *ngFor = 'let subCuenta of cuenta.desglose'>
+						<span class='badge'>{{subCuenta.descripcion}}: </span>
+						<input type="text" [(ngModel)]='subCuenta.valor'>
+					</li>
+				</ol>
+			</li>
+		</ol>
+	</li>
+</ul>

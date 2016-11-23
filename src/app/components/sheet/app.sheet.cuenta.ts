@@ -1,7 +1,7 @@
 export class Cuenta{
 	id: number;
 	descripcion: string;
-	valor: number;
+	valor: string;
 	desglose: Cuenta[];
 
 }

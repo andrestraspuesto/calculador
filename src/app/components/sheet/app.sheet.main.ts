@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import {OnInit} from '@angular/core';
 import { LOCALE_ID } from '@angular/core';
+import { OnChanges, SimpleChanges, DoCheck } from "@angular/core";
 
 import { Cuenta } from './app.sheet.cuenta';
 import { CuentaService } from './app.sheet.cuenta.service';
@@ -11,21 +12,52 @@ import { CuentaService } from './app.sheet.cuenta.service';
   styleUrls: ['../../css/skeleton.css','../../css/normalize.css'],
   providers: [{ provide: LOCALE_ID, useValue: "es-ES" }]
 })
-export class AppComponent {
+export class AppComponent implements OnChanges{
 	constructor(private cuentaService: CuentaService){};
 	title = 'Balance';
 	balance: Cuenta[];
-	calculaSuma(cuenta: Cuenta): void {
-		//cuenta.valor = Number.prototype.toLocaleString(0.0);
+	cuentaActual: Cuenta;
+
+	@Output() inputChanged: EventEmitter<Cuenta> = new EventEmitter();
+	
+	calculaSuma(cuenta: Cuenta, cuentaPadre: Cuenta, currCuenta: Cuenta): void {
+		console.log(this.cuentaActual);
+		if(isNaN(this.toNumber(this.cuentaActual.valor))){
+			this.cuentaActual.valor = this.cuentaActual.valor.split(/[^1234567890\.,]/).join('');
+			console.log('mod');
+			console.log(this.cuentaActual.valor);
+			this.inputChanged.emit(this.cuentaActual);
+		}
+		this.sumaDesglose(cuenta);
+		this.sumaDesglose(cuentaPadre);
+	}
+
+
+	ngOnInit():void{ this.balance = this.cuentaService.getBalance();}
+
+	public ngOnChanges( changes: SimpleChanges) : void {
+		console.log('changes');
+		console.log(changes);
+	}
+	public select(cuenta: Cuenta):void {
+		this.cuentaActual = cuenta;
+		console.log("onSelect");
+	}
+	toNumber(strOriginal: string): number {
+		let str = strOriginal.split(/\./).join('');
+		str = str.replace(/,/,'.');
+		return +str;
+	}
+	
+	sumaDesglose(cuenta: Cuenta): void {
+		//console.log(cuenta);
 		let valor = 0.0;
 		for(let c of cuenta.desglose){
-			let str = String(c.valor);
-			str = str.replace(/\./,'');
-			str = str.replace(/,/,'.');
-			valor = +str + +valor;
+			
+			valor = this.toNumber(String(c.valor)) + valor;
 		}
 		cuenta.valor = valor.toLocaleString();
 	}
 
-	ngOnInit():void{ this.balance = this.cuentaService.getBalance();}
 }
+;;

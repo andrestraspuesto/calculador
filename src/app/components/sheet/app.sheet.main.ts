@@ -18,15 +18,9 @@ export class AppComponent implements OnChanges{
 	balance: Cuenta[];
 	cuentaActual: Cuenta;
 
-	@Output() inputChanged: EventEmitter<Cuenta> = new EventEmitter();
-	
-	calculaSuma(cuenta: Cuenta, cuentaPadre: Cuenta, currCuenta: Cuenta): void {
-		console.log(this.cuentaActual);
+	calculaSuma(cuenta: Cuenta, cuentaPadre: Cuenta/*, currCuenta: Cuenta*/): void {
 		if(isNaN(this.toNumber(this.cuentaActual.valor))){
 			this.cuentaActual.valor = this.cuentaActual.valor.split(/[^1234567890\.,]/).join('');
-			console.log('mod');
-			console.log(this.cuentaActual.valor);
-			this.inputChanged.emit(this.cuentaActual);
 		}
 		this.sumaDesglose(cuenta);
 		this.sumaDesglose(cuentaPadre);
@@ -35,10 +29,8 @@ export class AppComponent implements OnChanges{
 
 	ngOnInit():void{ this.balance = this.cuentaService.getBalance();}
 
-	public ngOnChanges( changes: SimpleChanges) : void {
-		console.log('changes');
-		console.log(changes);
-	}
+	public ngOnChanges( changes: SimpleChanges) : void {}
+
 	public select(cuenta: Cuenta):void {
 		this.cuentaActual = cuenta;
 		console.log("onSelect");
@@ -52,8 +44,7 @@ export class AppComponent implements OnChanges{
 	sumaDesglose(cuenta: Cuenta): void {
 		//console.log(cuenta);
 		let valor = 0.0;
-		for(let c of cuenta.desglose){
-			
+		for(let c of cuenta.desglose){			
 			valor = this.toNumber(String(c.valor)) + valor;
 		}
 		cuenta.valor = valor.toLocaleString();

@@ -7,7 +7,7 @@
 				<span class="one columns"><input tyep='text' [(ngModel)]='cuenta.valor' [attr.disabled]='cuenta.desglose.length > 0? true: null'  ></span>
 				<div *ngFor = 'let subCuenta of cuenta.desglose' >
 					<span class="nine columns">{{subCuenta.descripcion}}: </span>
-					<span class="one columns"><input tyep='text' [(ngModel)]='subCuenta.valor' (focus)='select(subCuenta)' (ngModelChange)='calculaSuma(cuenta, superCuenta, subCuenta)' ></span>
+					<span class="one columns"><input tyep='text' [(ngModel)]='subCuenta.valor' (focus)='select(subCuenta)' (ngModelChange)='calculaSuma(cuenta, superCuenta)' ></span>
 				</div>
 			</div>
 		</div>
